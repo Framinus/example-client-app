@@ -4,7 +4,7 @@ $(function() {
   var outputVolumeBar = document.getElementById("output-volume");
   var inputVolumeBar = document.getElementById("input-volume");
   var volumeIndicators = document.getElementById("volume-indicators");
-
+  
   var device;
 
   log("Requesting Access Token...");

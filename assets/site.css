@@ -126,6 +126,14 @@ div#controls {
         display: none;
       }
 
+      div#controls div#call-controls button#button-accept {
+        display: none;
+      }
+
+      div#controls div#call-controls button#button-reject {
+        display: none;
+      }
+
   div#controls div#log {
     border: 1px solid #686865;
     width: 35%;
@@ -146,3 +154,4 @@ div#controls {
       text-indent: -1.25em;
       width: 90%;
     }
+

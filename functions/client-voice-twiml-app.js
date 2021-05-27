@@ -4,8 +4,8 @@ exports.handler = function(context, event, callback) {
   if (event.To) {
     // Wrap the phone number or client name in the appropriate TwiML verb
     // if is a valid phone number
+    
     const attr = isAValidPhoneNumber(event.To) ? "number" : "client";
-
     const dial = twiml.dial({
       answerOnBridge: true,
       callerId: process.env.CALLER_ID
