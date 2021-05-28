@@ -127,10 +127,12 @@ div#controls {
       }
 
       div#controls div#call-controls button#button-accept {
+        background-color: #008000;
         display: none;
       }
 
       div#controls div#call-controls button#button-reject {
+        background-color: #C70039;
         display: none;
       }
 

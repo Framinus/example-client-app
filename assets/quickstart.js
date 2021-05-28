@@ -6,6 +6,7 @@ $(function() {
   var volumeIndicators = document.getElementById("volume-indicators");
   
   var device;
+  let connection;
 
   log("Requesting Access Token...");
   // Using a relative link to access the Voice Token function
@@ -13,6 +14,8 @@ $(function() {
     .then(function(data) {
       log("Got a token.");
       console.log("Token: " + data.token);
+
+      let acceptIncomingCall = "pending";
 
       // Setup Twilio.Device
       device = new Twilio.Device(data.token, {
@@ -29,7 +32,8 @@ $(function() {
         // changes the behavior of the SDK to consider a call `ringing` starting
         // from the connection to the TwiML backend to when the recipient of
         // the `Dial` verb answers.
-        enableRingingState: true
+        enableRingingState: true,
+        edge: 'sao-paulo',
       });
 
       device.on("ready", function(device) {
@@ -45,6 +49,8 @@ $(function() {
         log("Successfully established call!");
         document.getElementById("button-call").style.display = "none";
         document.getElementById("button-hangup").style.display = "inline";
+        document.getElementById("button-accept").style.display = "none";
+        document.getElementById("button-reject").style.display = "none";
         volumeIndicators.style.display = "block";
         bindVolumeIndicators(conn);
       });
@@ -57,16 +63,10 @@ $(function() {
       });
 
       device.on("incoming", function(conn) {
+        connection = conn;
         log("Incoming connection from " + conn.parameters.From);
-        var archEnemyPhoneNumber = "+12093373517";
-
-        if (conn.parameters.From === archEnemyPhoneNumber) {
-          conn.reject();
-          log("It's your nemesis. Rejected call.");
-        } else {
-          // accept the incoming connection and start two-way audio
-          conn.accept();
-        }
+        document.getElementById("button-accept").style.display = "inline";
+        document.getElementById("button-reject").style.display = "inline";
       });
 
       setClientNameUI(data.identity);
@@ -83,6 +83,16 @@ $(function() {
       log("Could not get a token from server!");
     });
 
+  // update connection choice to accept incoming call
+  function acceptCall() {
+    connection.accept();
+  }
+
+  // update connection choice to reject incoming call
+  function rejectCall() {
+    connection.reject();
+  }
+
   // Bind button to make call
   document.getElementById("button-call").onclick = function() {
     // get the phone number to connect the call to
@@ -98,6 +108,18 @@ $(function() {
       });
     }
   };
+
+  // Bind button to accept incoming call
+  document.getElementById("button-accept").onclick = function() {
+    log("Accepting incoming call...");
+    acceptCall();
+  }
+
+  // Bind button to reject incoming call
+  document.getElementById("button-reject").onclick = function() {
+    log("Rejecting incoming call...");
+    rejectCall();
+  }
 
   // Bind button to hangup call
   document.getElementById("button-hangup").onclick = function() {
@@ -205,4 +227,7 @@ $(function() {
     var div = document.getElementById("client-name");
     div.innerHTML = "Your client name: <strong>" + clientName + "</strong>";
   }
+
+  
+
 });
